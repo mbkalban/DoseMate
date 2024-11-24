@@ -17,10 +17,51 @@ const toggleImportCodeButton = document.getElementById("toggle-import-code");
 const importCodeSection = document.getElementById("import-code-section");
 const checkRefillButton = document.getElementById("check-refill");
 
-// Initial Medications Data
-let medications = JSON.parse(localStorage.getItem("medications")) || [];
+// Initial Medications Data (static demo data for 3-4 medications)
+let medications = [
+    {
+        id: 1,
+        name: "Aspirin",
+        dosage: "100mg",
+        frequency: "Daily",
+        time: "08:00",
+        refillDate: "2024-11-25", // Date for refill reminder
+        pillsLeft: 5, // Number of pills left for the refill reminder
+        taken: false
+    },
+    {
+        id: 2,
+        name: "Ibuprofen",
+        dosage: "200mg",
+        frequency: "Every 6 hours",
+        time: "09:00",
+        refillDate: "2024-12-01", // Date for refill reminder
+        pillsLeft: 10,
+        taken: false
+    },
+    {
+        id: 3,
+        name: "Paracetamol",
+        dosage: "500mg",
+        frequency: "As needed",
+        time: "12:00",
+        refillDate: "2024-11-28",
+        pillsLeft: 2, // Urgent refill with low pills
+        taken: false
+    },
+    {
+        id: 4,
+        name: "Vitamin D",
+        dosage: "1000 IU",
+        frequency: "Weekly",
+        time: "10:00",
+        refillDate: "2024-12-10",
+        pillsLeft: 30,
+        taken: false
+    }
+];
 
-// Render Medications 
+// Render Medications
 function renderMedications() {
     medicationList.innerHTML = "";
     if (medications.length === 0) {
@@ -35,7 +76,7 @@ function renderMedications() {
             const pillsLeft = med.pillsLeft; // Track the number of pills left
 
             // Add class to change color if pills left are less than 3
-            const pillStatusClass = pillsLeft < 3 ? "urgent" : ""; 
+            const pillStatusClass = pillsLeft <= 3 ? "urgent" : ""; 
 
             medDiv.innerHTML = `
                 <div class="medication-info ${pillStatusClass}">
@@ -53,8 +94,9 @@ function renderMedications() {
         });
     }
 }
-
-
+toggleAddMedButton.addEventListener("click", () => {
+    addMedForm.classList.toggle("hidden");
+});
 // Add or Edit Medication
 medicationForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -72,13 +114,16 @@ medicationForm.addEventListener("submit", (e) => {
     validationError.classList.add("hidden");
 
     const editingMedId = medicationForm.dataset.editId;
+
+    // If editing a medication
     if (editingMedId) {
         medications = medications.map(med =>
             med.id === parseInt(editingMedId)
-                ? { ...med, name, dosage, frequency, time, refillDate, pillsLeft }
+                ? { ...med, name, dosage, frequency, time, refillDate, pillsLeft: parseInt(pillsLeft) }
                 : med
         );
     } else {
+        // Adding a new medication
         medications.push({
             id: Date.now(),
             name,
@@ -95,7 +140,7 @@ medicationForm.addEventListener("submit", (e) => {
     renderMedications();
     medicationForm.reset();
     addMedForm.classList.add("hidden");
-    delete medicationForm.dataset.editId;
+    delete medicationForm.dataset.editId; // Remove the edit ID after form submission
 });
 
 // Edit Medication
@@ -111,18 +156,24 @@ function editMedication(id) {
     addMedForm.classList.remove("hidden");
 }
 
-// Delete Medication
+// Delete Medication with Confirmation
 function deleteMedication(id) {
-    medications = medications.filter(med => med.id !== id);
-    saveMedications();
-    renderMedications();
+    const isConfirmed = window.confirm("Are you sure you want to delete this medication?");
+    if (isConfirmed) {
+        medications = medications.filter(med => med.id !== id);
+        saveMedications();
+        renderMedications();
+    }
 }
 
-// Clear All Medications
+// Clear All Medications with Confirmation
 clearAllButton.addEventListener("click", () => {
-    medications = [];
-    saveMedications();
-    renderMedications();
+    const isConfirmed = window.confirm("Are you sure you want to delete all medications?");
+    if (isConfirmed) {
+        medications = [];
+        saveMedications();
+        renderMedications();
+    }
 });
 
 // Generate a random 8-character code
