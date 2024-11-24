@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DoseMate - Manage Medications</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h1><span class="icon-pill">💊</span> Manage Medications</h1>
+      </div>
+      <div class="card-content">
+        <h2>Edit Your Medications</h2>
+        <div id="medication-list" class="medication-list">
+          <!-- Medications will be dynamically added here -->
+        </div>
+        
+        <!-- Toggleable Share Code Section -->
+        <button id="toggle-share-code" class="button">Share Your Medications</button>
+        <div id="share-code-section" class="hidden">
+          <h3>Share Your Medications</h3>
+          <p>Generate a shareable code for your medications:</p>
+          <button id="generate-share-code" class="button">Generate Share Code</button>
+          <div id="share-code-container" class="hidden">
+            <input type="text" id="share-code" readonly placeholder="Share Code will appear here" />
+            <button id="copy-code" class="button success">Copy Code</button>
+          </div>
+        </div>
+
+        <!-- Toggleable Import Code Section -->
+        <button id="toggle-import-code" class="button">Import Medications</button>
+        <div id="import-code-section" class="hidden">
+          <h3>Import Medications Using a Share Code</h3>
+          <input type="text" id="import-code" placeholder="Enter Share Code" />
+          <button id="import-code-button" class="button primary">Import</button>
+        </div>
+
+        <div id="add-medication-form" class="add-medication hidden">
+          <h3>Add/Edit Medication</h3>
+          <form id="medication-form">
+            <input type="text" id="med-name" placeholder="Medication Name" required />
+            <input type="text" id="med-dosage" placeholder="Dosage (e.g., 100mg)" required />
+            <input type="text" id="med-frequency" placeholder="Frequency (e.g., Daily)" required />
+            <input type="time" id="med-time" required />
+            <input type="number" id="med-pills-left" placeholder="Pills Left" min="1" required />
+            <input type="date" id="med-refill-date" placeholder="Refill Date" />
+            <button type="submit" class="button">Save Medication</button>
+          </form>
+        </div>
+        <p id="validation-error" class="hidden error-message">Please fill out all fields!</p>
+        
+        <!-- Refill Notification Section -->
+        <div id="refill-notification-section" class="hidden">
+          <div class="notification">
+            <p><strong>Refill Reminder:</strong> Your medication <strong>Aspirin</strong> is due for a refill!</p>
+            <button class="button" onclick="openRefillPage()">Order Refill</button>
+          </div>
+        </div>
+        
+      </div>
+      <div class="card-footer">
+        <!-- Check Refill Button -->
+        <button id="check-refill" class="button">Check Refill</button>
+        
+        <!-- Other Footer Buttons -->
+        <button id="toggle-add-med" class="button secondary">+ Add Medication</button>
+        <button id="clear-all" class="button outline">🗑 Clear All</button>
+        <a href="index.html" class="button primary">Back to Tracker</a>
+      </div>
+    </div>
+  </div>
+  <script src="manage.js"></script>
+</body>
+</html>
